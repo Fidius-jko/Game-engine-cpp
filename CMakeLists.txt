@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 2.22.1 FATAL_ERROR)
+
+set(PROJECT_NAME cppEngine)
+project(${PROJECT_NAME})
+
+add_subdirectory(EngineCore)
+add_subdirectory(EngineEditor)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT EngineEditor)
