@@ -1,3 +1,0 @@
-namespace cppEngine {
-	int sayHello();
-}

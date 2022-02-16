@@ -1,12 +1,19 @@
 #include <iostream>
+#include <CORE/Application.hpp>
+#include <memory>
 
-#include <CORE/Utils/test.hpp>
+class MyApp : public Engine::Application {
+	virtual void onUpdate() override {
+		//std::cout << "Update frame: " << frame++ << "\n";
+	}
+	int frame = 0;
+};
 
 int main() {
-	std::cout << "Hello from Engine Editor\n";
+	auto myApp = std::make_unique<MyApp>();
 
-	cppEngine::sayHello();
-
+	int returnCode = myApp->start(1024, 768, "My frist App");
 
 	std::cin.get();
+	return returnCode;
 }
