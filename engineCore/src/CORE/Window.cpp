@@ -1,7 +1,11 @@
 #include "CORE/Window.hpp"
 #include "CORE/log.hpp"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <imgui/imgui.h>
+#include <imgui/backends/imgui_impl_opengl3.h> 
+#include <imgui/backends/imgui_impl_glfw.h> 
 
 
 namespace Engine {
@@ -11,7 +15,12 @@ namespace Engine {
 	Window::Window(std::string tile, const unsigned int width, const unsigned int height)
         :m_data({std::move(tile), width, height})
 	{
+
 		int returnCode = init();
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGui_ImplOpenGL3_Init();
+        ImGui_ImplGlfw_InitForOpenGL(m_window, true);
 	}
 	Window::~Window(){
 		shotdown();
@@ -83,9 +92,25 @@ namespace Engine {
 	}
 
 	void Window::onUpdate() {
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(m_bangroundColor[0], m_bangroundColor[1], m_bangroundColor[2], m_bangroundColor[3]);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        ImGuiIO& io = ImGui::GetIO();
+        io.DisplaySize.x = static_cast<float>(getWidth());
+        io.DisplaySize.y = static_cast<float>(getHeight());
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::ShowDemoWindow();
+
+        ImGui::Begin("Banground window color");
+        ImGui::ColorEdit4("Banground color", m_bangroundColor);
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();

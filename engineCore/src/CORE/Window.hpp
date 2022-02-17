@@ -42,5 +42,6 @@ namespace Engine {
 
 		GLFWwindow* m_window;
 		WindowData m_data;
+		float m_bangroundColor[4] = {1.0f, 0.0f, 0.0f, 0.0f};
 	};
 }
