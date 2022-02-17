@@ -3,69 +3,27 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "CORE/log.hpp"
+#include "CORE/Window.hpp"
 
 namespace Engine {
-	Application::Application() {
-        LOG_INFO("WETCOME TO");
-        LOG_INFO("Welcome to spdlog!");
-        LOG_ERROR("Some error message with arg: {}", 1);
+    Application::Application() {
+        LOG_INFO("Starting Application");
+    }
+    Application::~Application() {
 
-        LOG_WARN("Easy padding in numbers like {:08d}", 12);
-        LOG_CRITICAL("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
-        LOG_INFO("Support for floats {:03.2f}", 1.23456);
-        LOG_INFO("Positional args are {1} {0}..", "too", "supported");
-        LOG_INFO("{:<30}", "left aligned");
-	}
-	Application::~Application() {
+        LOG_INFO("Closing Application");
+    }
 
-	}
+    int Application::start(unsigned int windowWidth, unsigned int windowHeight, const char* tile) {
+        m_window = std::make_unique<Window>(tile, windowWidth, windowHeight);
 
-	int Application::start(unsigned int windowWidth, unsigned int windowHeight, const char* tile) {
-        GLFWwindow* window;
-
-        /* Initialize the library */
-        if (!glfwInit())
-            return -1;
-
-        /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(windowWidth, windowHeight, tile, NULL, NULL);
-        if (!window)
-        {
-            glfwTerminate();
-            return -1;
-        }
-
-        /* Make the window's context current */
-        glfwMakeContextCurrent(window);
-
-
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-            LOG_CRITICAL("Failed to intiliaze GLAD");
-            glfwTerminate();
-            return -1;
-        }
-
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-        /* Loop until the user closes the window */
-        while (!glfwWindowShouldClose(window))
-        {
-            /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            /* Swap front and back buffers */
-            glfwSwapBuffers(window);
-
-            /* Poll for and process events */
-            glfwPollEvents();
-
+        while (true) {
+            m_window->onUpdate();
             onUpdate();
         }
+    }
 
-        glfwTerminate();
-        return 0;
-	}
+    void Application::onUpdate() {
 
-	void Application::onUpdate() {
-
-	}
+    }
 }

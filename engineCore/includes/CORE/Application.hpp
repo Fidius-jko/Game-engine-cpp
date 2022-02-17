@@ -1,4 +1,7 @@
 #pragma once
+#include <memory>
+
+
 namespace Engine {
 	class Application {
 	public:
@@ -11,8 +14,10 @@ namespace Engine {
 		Application& operator=(const Application&) = delete;
 		Application& operator=(Application&&) = delete;
 
-		virtual int start(unsigned int windowWidth, unsigned int windowHeight, const char* tile); 
+		virtual int start(unsigned int windowWidth, unsigned int windowHeight, const char* tile);
 
 		virtual void onUpdate();
+	private:
+		std::unique_ptr<class Window> m_window;
 	};
 }
