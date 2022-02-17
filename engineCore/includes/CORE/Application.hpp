@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-
+#include "CORE/Event.hpp"
 
 namespace Engine {
 	class Application {
@@ -19,5 +19,8 @@ namespace Engine {
 		virtual void onUpdate();
 	private:
 		std::unique_ptr<class Window> m_window;
+
+		EventDispatcher m_eventDispather;
+		bool m_isCloseWindow = false;
 	};
 }

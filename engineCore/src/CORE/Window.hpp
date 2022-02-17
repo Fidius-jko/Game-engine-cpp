@@ -9,7 +9,7 @@ struct  GLFWwindow;
 namespace Engine {
 	class Window {
 	public:
-		using EventCallbackFN = std::function<void(Event&)>;
+		using EventCallbackFN = std::function<void(BaseEvent&)>;
 
 		Window(std::string tile, const unsigned int width, const unsigned int height);
 		~Window();

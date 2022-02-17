@@ -55,11 +55,25 @@ namespace Engine {
                 data.width = width;
                 data.height = height;
 
-                Event event;
-                event.height = height;
-                event.width = width;
+                EventWindowResize event(width, height);
                 data.eventCallbackFN(event);
             });
+        glfwSetCursorPosCallback(m_window,
+            [](GLFWwindow* window, double curY, double curX) {
+                WindowData& data = *static_cast<WindowData*> (glfwGetWindowUserPointer(window));
+                EventMouseMoved event(curX, curY);
+                data.eventCallbackFN(event);
+            }
+        );
+
+        glfwSetWindowCloseCallback(m_window,
+            [](GLFWwindow* window) {
+                WindowData& data = *static_cast<WindowData*> (glfwGetWindowUserPointer(window));
+                
+                EventWindowClose event;
+                data.eventCallbackFN(event);
+            }
+        );
         return 0;
 	}
 
