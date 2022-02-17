@@ -9,9 +9,7 @@ namespace Engine {
     static bool isInitGLFW = false; 
 
 	Window::Window(std::string tile, const unsigned int width, const unsigned int height)
-		:m_tile(std::move(tile))
-		, m_width(width)
-		, m_height(height)
+        :m_data({std::move(tile), width, height})
 	{
 		int returnCode = init();
 	}
@@ -21,7 +19,7 @@ namespace Engine {
 
 
     int Window::init() {
-        LOG_INFO("Creating Window '{0}' size {1}x{2}", m_tile, m_width, m_height);
+        LOG_INFO("Creating Window '{0}' size {1}x{2}", m_data.tile, m_data.width, m_data.height);
 
         if (!isInitGLFW) {
             if (!glfwInit()) {
@@ -31,10 +29,10 @@ namespace Engine {
             isInitGLFW = true;
         }
 
-        m_window = glfwCreateWindow(m_width, m_height, m_tile.c_str(), nullptr, nullptr);
+        m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.tile.c_str(), nullptr, nullptr);
         if (m_window == nullptr)
         {
-            LOG_CRITICAL("Failed to create Window '{0}'  size {1}x{2}", m_tile, m_width, m_height);
+            LOG_CRITICAL("Failed to create Window '{0}'  size {1}x{2}", m_data.tile, m_data.width, m_data.height);
             glfwTerminate();
             return -2;
         }
@@ -47,6 +45,21 @@ namespace Engine {
             glfwTerminate();
             return -3;
         }
+
+
+        glfwSetWindowUserPointer(m_window, &m_data);
+
+        glfwSetWindowSizeCallback(m_window, 
+            [](GLFWwindow* window, int width, int height) {
+                WindowData& data = *static_cast<WindowData*>( glfwGetWindowUserPointer(window));
+                data.width = width;
+                data.height = height;
+
+                Event event;
+                event.height = height;
+                event.width = width;
+                data.eventCallbackFN(event);
+            });
         return 0;
 	}
 
