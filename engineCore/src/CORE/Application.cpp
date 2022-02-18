@@ -19,7 +19,7 @@ namespace Engine {
         m_eventDispather.add_event_listener<EventMouseMoved>(
             [](EventMouseMoved& event)
             {
-                LOG_INFO("[MouseMoved] Mouse moved to {0}x{1}", event.x, event.y);
+                //LOG_INFO("[MouseMoved] Mouse moved to {0}x{1}", event.x, event.y);
             });
         m_eventDispather.add_event_listener<EventWindowResize>(
             [](EventWindowResize& event) {

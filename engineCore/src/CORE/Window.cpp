@@ -1,11 +1,14 @@
 #include "CORE/Window.hpp"
 #include "CORE/log.hpp"
+#include "Rendering/OpenGL/shaderProgram.hpp"
+
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_opengl3.h> 
 #include <imgui/backends/imgui_impl_glfw.h> 
+
 
 
 namespace Engine {
@@ -34,10 +37,9 @@ namespace Engine {
         "void main() {\n"
         "   FragColor = vec4(ourColor, 1.0f);\n"
         "}\n";
-    GLuint shaderProgram;
     GLuint VBO, VAO;
 
-
+    std::unique_ptr<ShaderProgram> shaderProgram;
 	Window::Window(std::string tile, const unsigned int width, const unsigned int height)
         :m_data({std::move(tile), width, height})
 	{
@@ -109,20 +111,18 @@ namespace Engine {
                 data.eventCallbackFN(event);
             }
         );
+        glfwSetFramebufferSizeCallback(m_window,
+            [](GLFWwindow* window, int width, int height)
+            {
+                glViewport(0, 0, width, height);
+            }
+        );
 
 
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &vertexSource, NULL);
-        glCompileShader(vertexShader);
-
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-        glCompileShader(fragmentShader);
-
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
+        shaderProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
+        if (!shaderProgram->isCompiled()) {
+            return -4;
+        }
 
         GLuint VBO;
         glGenBuffers(1, &VBO);
@@ -150,7 +150,7 @@ namespace Engine {
         glClearColor(m_bangroundColor[0], m_bangroundColor[1], m_bangroundColor[2], m_bangroundColor[3]);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        shaderProgram->Bind();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 

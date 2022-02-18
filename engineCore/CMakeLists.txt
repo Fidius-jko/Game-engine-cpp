@@ -18,11 +18,19 @@ set(CORE_PRIVATE_SOURCES
 	src/CORE/Rendering/OpenGL/shaderProgram.cpp
 )
 
-add_library(${CORE_PROJECT_NAME} STATIC
+set(CORE_ALL_SOURCES
 	${CORE_PUBLIC_INCLUDES}
 	${CORE_PRIVATE_INCLUDES}
 	${CORE_PRIVATE_SOURCES}
-	)
+)
+
+add_library(${CORE_PROJECT_NAME}
+	${CORE_ALL_SOURCES}
+)
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES
+	${CORE_ALL_SOURCES}
+)
 
 target_include_directories(${CORE_PROJECT_NAME} PUBLIC includes)
 target_include_directories(${CORE_PROJECT_NAME} PRIVATE src)

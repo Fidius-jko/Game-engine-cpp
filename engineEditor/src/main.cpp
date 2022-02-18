@@ -12,7 +12,7 @@ class MyApp : public Engine::Application {
 int main() {
 	auto myApp = std::make_unique<MyApp>();
 
-	int returnCode = myApp->start(1024, 768, "My frist App");
+	int returnCode = myApp->start(1024, 768, "TEST app");
 
 	return returnCode;
 }
