@@ -1,6 +1,7 @@
 #include "CORE/Window.hpp"
 #include "CORE/log.hpp"
 #include "Rendering/OpenGL/shaderProgram.hpp"
+#include "Rendering/OpenGL/VertexBuffer.hpp"
 
 
 #include <glad/glad.h>
@@ -13,7 +14,7 @@
 
 namespace Engine {
 
-    static bool isInitGLFW = false; 
+    static bool isInitGLFW = false;
 
     GLfloat vertices[] = {
          0.0f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
@@ -37,22 +38,23 @@ namespace Engine {
         "void main() {\n"
         "   FragColor = vec4(ourColor, 1.0f);\n"
         "}\n";
-    GLuint VBO, VAO;
+    GLuint VAO;
 
     std::unique_ptr<ShaderProgram> shaderProgram;
-	Window::Window(std::string tile, const unsigned int width, const unsigned int height)
-        :m_data({std::move(tile), width, height})
-	{
+    std::unique_ptr<VertexBuffer> VBO;
+    Window::Window(std::string tile, const unsigned int width, const unsigned int height)
+        :m_data({ std::move(tile), width, height })
+    {
 
-		int returnCode = init();
+        int returnCode = init();
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui_ImplOpenGL3_Init();
         ImGui_ImplGlfw_InitForOpenGL(m_window, true);
-	}
-	Window::~Window(){
-		shotdown();
-	}
+    }
+    Window::~Window() {
+        shotdown();
+    }
 
 
     int Window::init() {
@@ -74,7 +76,7 @@ namespace Engine {
             return -2;
         }
 
-          glfwMakeContextCurrent(m_window);
+        glfwMakeContextCurrent(m_window);
 
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -86,9 +88,9 @@ namespace Engine {
 
         glfwSetWindowUserPointer(m_window, &m_data);
 
-        glfwSetWindowSizeCallback(m_window, 
+        glfwSetWindowSizeCallback(m_window,
             [](GLFWwindow* window, int width, int height) {
-                WindowData& data = *static_cast<WindowData*>( glfwGetWindowUserPointer(window));
+                WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
                 data.width = width;
                 data.height = height;
 
@@ -106,7 +108,7 @@ namespace Engine {
         glfwSetWindowCloseCallback(m_window,
             [](GLFWwindow* window) {
                 WindowData& data = *static_cast<WindowData*> (glfwGetWindowUserPointer(window));
-                
+
                 EventWindowClose event;
                 data.eventCallbackFN(event);
             }
@@ -123,14 +125,10 @@ namespace Engine {
         if (!shaderProgram->isCompiled()) {
             return -4;
         }
+        VBO = std::make_unique<VertexBuffer>(vertices, sizeof(vertices));
 
-        GLuint VBO;
-        glGenBuffers(1, &VBO);
+
         glGenVertexArrays(1, &VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
         glBindVertexArray(VAO);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
@@ -139,14 +137,14 @@ namespace Engine {
         glEnableVertexAttribArray(1);
 
         return 0;
-	}
+    }
 
-	void Window::shotdown() {
+    void Window::shotdown() {
         glfwDestroyWindow(m_window);
         glfwTerminate();
-	}
+    }
 
-	void Window::onUpdate() {
+    void Window::onUpdate() {
         glClearColor(m_bangroundColor[0], m_bangroundColor[1], m_bangroundColor[2], m_bangroundColor[3]);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -171,5 +169,5 @@ namespace Engine {
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();
-	}
+    }
 }

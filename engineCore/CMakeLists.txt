@@ -10,12 +10,16 @@ set(CORE_PUBLIC_INCLUDES
 set(CORE_PRIVATE_INCLUDES
 	src/CORE/Window.hpp
 	src/CORE/Rendering/OpenGL/shaderProgram.hpp
+	src/CORE/Rendering/OpenGL/VertexBuffer.hpp
+	src/CORE/Rendering/OpenGL/VertexArray.hpp
 )
 
 set(CORE_PRIVATE_SOURCES
 	src/CORE/Application.cpp
 	src/CORE/Window.cpp
 	src/CORE/Rendering/OpenGL/shaderProgram.cpp
+	src/CORE/Rendering/OpenGL/VertexBuffer.cpp
+	src/CORE/Rendering/OpenGL/VertexArray.cpp
 )
 
 set(CORE_ALL_SOURCES
