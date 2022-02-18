@@ -60,4 +60,4 @@ target_include_directories(ImGui PUBLIC ../external)
 target_include_directories(ImGui PUBLIC ../external/imgui)
 target_link_libraries(ImGui PRIVATE glad glfw)
 
-target_link_libraries(${ENGINE_PROJECT_NAME} PRIVATE ImGui)
+target_link_libraries(${CORE_PROJECT_NAME} PRIVATE ImGui)

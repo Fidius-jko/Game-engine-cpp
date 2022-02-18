@@ -9,11 +9,13 @@ set(CORE_PUBLIC_INCLUDES
 )
 set(CORE_PRIVATE_INCLUDES
 	src/CORE/Window.hpp
+	src/CORE/Rendering/OpenGL/shaderProgram.hpp
 )
 
 set(CORE_PRIVATE_SOURCES
 	src/CORE/Application.cpp
 	src/CORE/Window.cpp
+	src/CORE/Rendering/OpenGL/shaderProgram.cpp
 )
 
 add_library(${CORE_PROJECT_NAME} STATIC

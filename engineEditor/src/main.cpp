@@ -14,6 +14,5 @@ int main() {
 
 	int returnCode = myApp->start(1024, 768, "My frist App");
 
-	std::cin.get();
 	return returnCode;
 }
